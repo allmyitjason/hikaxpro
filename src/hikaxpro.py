@@ -84,6 +84,17 @@ class HikAxPro:
         
         return result
 
+    def logout(self):        
+        logoutEnpoint = self.buildUrl(f"http://{self.host}{consts.Endpoints.Session_Logout}", True)
+        response = self.makeRequest(logoutEnpoint, consts.Method.PUT)
+
+        if response.status_code != 200:
+            raise errors.UnexpectedResponseCodeError(response.status_code, response.text)
+
+        self.cookie = ''
+        
+        return response.status_code == 200
+
     def buildUrl(self, endpoint, isJson):
         paramPrefix = "&" if "?" in endpoint else "?"
         return (f"{endpoint}{paramPrefix}format=json" if isJson else endpoint)
